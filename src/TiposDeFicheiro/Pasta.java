@@ -44,6 +44,17 @@ public class Pasta extends Ficheiro {
 		return existe;
 	}
 	
+	//Verifica se um ficheiro existe numa pasta e retorna o mesmo atraves do nome
+	public Ficheiro retornaFicheiro(String nome) {
+		for(Ficheiro ficheiro: ficheiros) {
+			if(ficheiro.getNome().equals(nome)) {
+				return ficheiro;
+			}
+		}
+		
+		return null;
+	}
+	
 	//Organiza os ficheiros na pasta de forma alfabetica
 	private void organizar() {
 		Collections.sort(ficheiros, new Comparator<Ficheiro>() {
