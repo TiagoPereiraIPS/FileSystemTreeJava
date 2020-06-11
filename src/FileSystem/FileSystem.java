@@ -111,6 +111,15 @@ public class FileSystem implements IFileSystem {
 		
 		return preOrdem(root, 0);
 	}
+	
+	@Override
+	public String listarFicheirosFileSystemAtual() {
+		if (atual.getFicheiros().isEmpty()) {
+			return "-" + atual.getNome() + "(" + atual.getTipoFicheiro() + ")" + "\n";
+		}
+		
+		return preOrdem(atual, 0);
+	}
 
 	private String preOrdem(Pasta ficheiro, int nivel) {
 		String resultado = "";

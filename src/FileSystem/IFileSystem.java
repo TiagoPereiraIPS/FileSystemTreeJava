@@ -30,4 +30,7 @@ public interface IFileSystem {
 	
 	//Lista todos os ficheiros do filesystem(arvore) (metodo de listagem preOrder)
 	String listarFicheirosFileSystem();
+	
+	//Lista todos os ficheiros do filesystem(arvore) a partir da pasta atual (metodo de listagem preOrder)
+	String listarFicheirosFileSystemAtual();
 }
