@@ -7,11 +7,13 @@ import TiposDeFicheiro.Pasta;
 
 public class FileSystem implements IFileSystem {
 	//Atributo
-	public Pasta root;
+	private Pasta root;
+	private Pasta atual;
 	
 	//Construtor
 	public FileSystem() {
 		this.root=new Pasta("root");
+		this.atual=getRoot();
 	}
 	
 	//Acessor
@@ -19,21 +21,61 @@ public class FileSystem implements IFileSystem {
 		return root;
 	}
 	
+	public Pasta getAtual() {
+		return atual;
+	}
+	
+	public void setAtual(Pasta atual) {
+		this.atual = atual;
+	}
+	
 	//Metodos
 	@Override
-	public void inserir(Pasta pasta, Ficheiro ficheiro) {
-		pasta.inserir(ficheiro);
+	public String inserir(Ficheiro ficheiro) {
+		if(!(getAtual().existe(ficheiro.getNome()))) {
+			atual.inserir(ficheiro);
+			return ficheiro.getTipoFicheiro() + " " + ficheiro.getNome() + " criado com sucesso.\n";
+		}
+		return "Não pode repetir nomes de ficheiros existentes.\n";
+	}
+	
+	@Override
+	public String apagar(Ficheiro ficheiro) {
+		if(atual.existe(ficheiro.getNome())) {
+			atual.remover(ficheiro);
+			return ficheiro.getTipoFicheiro() + " " + ficheiro.getNome() + " eliminado com sucesso.\n";
+		}
+		return "Falha na eliminação, ficheiro não existente.\n";
+	}
+	
+	@Override
+	public Ficheiro retornaFicheiro(String nome) {
+		return getAtual().retornaFicheiro(nome);
 	}
 
 	@Override
-	public String apagar(Pasta pasta, Ficheiro ficheiro) {
-		if(pasta.existe(ficheiro.getNome())) {
-			pasta.remover(ficheiro);
-			return "Ficheiro " + ficheiro.getNome() + " eliminado com sucesso";
-		}
-		return "Falha na eliminação, ficheiro não existente";
+	public boolean existe(String nome) {
+		return getAtual().existe(nome);
 	}
-
+	
+	@Override
+	public String listar() {
+		return getAtual().listar() + "\n";
+	}
+	
+	@Override
+	public String resetConteudoAtual() {
+		getAtual().resetConteudo();
+		return "Pasta " + getAtual().getNome() + " resetada com sucesso.\n";
+	}
+	
+	@Override
+	public String resetConteudo(String nome) {
+		Ficheiro ficheiro = retornaFicheiro(nome);
+		ficheiro.resetConteudo();
+		return ficheiro.getTipoFicheiro() + " " + ficheiro.getNome() + " resetado com sucesso.\n";
+	}
+	
 	@Override
 	public Ficheiro pesquisarFicheiro(String nome) {
 		LinkedList<Pasta> porVerificar = new LinkedList<Pasta>();

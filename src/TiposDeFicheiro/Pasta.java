@@ -23,6 +23,7 @@ public class Pasta extends Ficheiro {
 	//Insere um ficheiro na pasta
 	public void inserir(Ficheiro ficheiro) {
 		ficheiros.add(ficheiro);
+		ficheiro.setPai(this);
 		organizar();
 	}
 	

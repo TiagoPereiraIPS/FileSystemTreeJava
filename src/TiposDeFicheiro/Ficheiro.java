@@ -3,10 +3,12 @@ package TiposDeFicheiro;
 public abstract class Ficheiro {
 	//Atributo
 	private String nome;
+	private Pasta pai;
 	
 	//Construtor
 	public Ficheiro(String nome) {
 		this.nome=nome;
+		this.pai=null;
 	}
 
 	//Acessores
@@ -18,8 +20,16 @@ public abstract class Ficheiro {
 		this.nome = nome;
 	}
 	
+	public Pasta getPai() {
+		return pai;
+	}
+
+	public void setPai(Pasta pai) {
+		this.pai = pai;
+	}
+	
 	//Metodo
-	//Lista os conteudos presentes no ficheiro
+	//Lista os conteudos presentes num ficheiro
 	public abstract String listar();
 	
 	//Este método apaga os conteudos de um ficheiro
