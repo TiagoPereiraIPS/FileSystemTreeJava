@@ -16,7 +16,7 @@ public class Main {
 		System.out.println("Esperando input do utilizador");
 		input = comando.nextLine();
 		
-		processarInput(input);
+		processarInput(input.trim());
 		
 		main(args);
 	}
@@ -39,27 +39,29 @@ public class Main {
 			}
 		} else if(validacaoNavegacao(inputDividido)) {
 			navegar(inputDividido);
+		} else if(validacaoHelp(inputDividido)) {
+			help();
 		} else {
 			System.out.println("O comando introduzido não cumpre com as normas.\n");
 		}
 	}
 	
-	//Permite entrar e retroceder nas pastas
+	//Permite entrar e retroceder nas pastas, assim como realizar listagens de ficheiros
 	private static void navegar(String[] dados) {
 		switch(dados[0].toUpperCase()) {
 		case "ENTERFOLDER":
 			if(fileSystem.existe(dados[1]) && fileSystem.retornaFicheiro(dados[1]).getTipoFicheiro().equals("Pasta")) {
 				fileSystem.setAtual((Pasta) fileSystem.retornaFicheiro(dados[1]));
-				System.out.println("Entrou na pasta " + fileSystem.getAtual());
+				System.out.println("Entrou na pasta " + fileSystem.getAtual().getNome());
 			} else {
 				System.out.println("O ficheiro especificado não existe ou não é uma pasta.\n");
 			}
 			break;
 		case "BACKFOLDER":
 			if(fileSystem.getAtual().getPai() != null) {
-				System.out.println("Saiu da pasta " + fileSystem.getAtual() + ".");
+				System.out.println("Saiu da pasta " + fileSystem.getAtual().getNome() + ".");
 				fileSystem.setAtual(fileSystem.getAtual().getPai());
-				System.out.println("Entrou na pasta " + fileSystem.getAtual() + ".\n");
+				System.out.println("Entrou na pasta " + fileSystem.getAtual().getNome() + ".\n");
 			} else {
 				System.out.println("Não existe pasta anterior.\n");
 			}
@@ -266,5 +268,82 @@ public class Main {
 		}
 		return false;
 	}
+	
+	//
+	private static boolean validacaoHelp(String[] argumentos) {
+		try {
+			return argumentos[0].toUpperCase().equals("HELP");
+		}catch(IndexOutOfBoundsException ex) {
+			return false;
+		}
+	}
 
+	//Fornece informações acerca dos comandos a utilizar e redireciona para as informações
+	private static void help() {
+		System.out.println("Insira 1 para informações acerca de ficheiros de texto;");
+		System.out.println("Insira 2 para informações acerca de ficheiros de cálculo;");
+		System.out.println("Insira 3 para informações acerca de pastas;");
+		System.out.println("Insira 4 para informações acerca de navegação e listagens gerais.");
+		
+		String input;
+		Scanner comando = new Scanner(System.in);
+		
+		System.out.println("Esperando numero da opção, para cancelar esta operação insira qualquer outro carater.");
+		input = comando.nextLine();
+		
+		switch(input.trim()) {
+		case "1":
+			infoFicheiroDeTexto();
+			break;
+		case "2":
+			infoFicheiroDeCalculo();
+			break;
+		case "3":
+			infoPastas();
+			break;
+		case "4":
+			infoNavegacao();
+			break;
+		}
+	}
+
+	//Informações detalhadas acerca dos ficheiros de texto
+	private static void infoFicheiroDeTexto() {
+		System.out.println("Exemplos de comandos");
+		System.out.println("Criar ficheiro de texto:\n  make textfile nomeFicheiro corpo do texto\n");
+		System.out.println("Apagar ficheiro de texto:\n  delete textfile nomeFicheiro\n");
+		System.out.println("Substituir conteúdo de um ficheiro de texto:\n  replacedata textfile nomeFicheiro corpo do texto\n");
+		System.out.println("Listar conteúdo de um ficheiro de texto:\n  list textfile nomeFicheiro\n");
+		System.out.println("Apagar conteúdo de um ficheiro de texto:\n  reset textfile nomeFicheiro\n");
+		System.out.println("Adicionar conteúdos aos existentes de um ficheiro de texto:\n  adddata textfile nomeFicheiro corpo do texto\n");
+	}
+
+	//Informações detalhadas acerca dos ficheiros de calculo
+	private static void infoFicheiroDeCalculo() {
+		System.out.println("Exemplos de comandos");
+		System.out.println("Criar ficheiro de cálculo:\n  make spreadsheet nomeFicheiro\n");
+		System.out.println("Apagar ficheiro de cálculo:\n  delete spreadsheet nomeFicheiro\n");
+		System.out.println("Substituir conteúdo de um ficheiro de cálculo:\n  replacedata spreadsheet nomeFicheiro numero1 operação(+,-,*,/,%,^) numero2\n");
+		System.out.println("Listar conteúdo de um ficheiro de cálculo:\n  list spreadsheet nomeFicheiro\n");
+		System.out.println("Apagar conteúdo de um ficheiro de cálculo:\n  reset spreadsheet nomeFicheiro\n");
+		System.out.println("Adicionar conteúdos aos existentes de um ficheiro de cálculo:\n  adddata spreadsheet nomeFicheiro numero1 operação(+,-,*,/,%,^) numero2\n");
+	}
+
+	//Informações detalhadas acerca das pastas
+	private static void infoPastas() {
+		System.out.println("Exemplos de comandos (quando é referida pasta atual, esta é referida à pasta que nos encontramos atualmente a navegar)");
+		System.out.println("Criar uma pasta:\n  make folder nomePasta\n");
+		System.out.println("Apagar uma pasta e os seus ficheiros:\n  delete folder nomePasta\n");
+		System.out.println("Listar ficheiros da pasta atual:\n  list folder\n");
+		System.out.println("Apagar todos os ficheiros da pasta atual:\n  reset folder\n");
+	}
+
+	//Informações detalhadas acerca da navegacao do filesystem e listagem de ficheiros
+	private static void infoNavegacao() {
+		System.out.println("Exemplos de comandos");
+		System.out.println("Entrar numa pasta:\n  enterfolder nomePasta\n");
+		System.out.println("Sair de uma pasta para a sua anterior (Pai):\n  backfolder\n");
+		System.out.println("Listar todos os ficheiros do filesystem:\n  listall\n");
+		System.out.println("Listar todos os ficheiros a partir da pasta atual:\n  listallcurrent\n");
+	}
 }
